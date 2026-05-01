@@ -6,39 +6,35 @@ function ProductivityMeter({ score }) {
 
   // Decide color based on score
   const getColor = () => {
-    if (safeScore < 40) return "#e74c3c"; // red
-    if (safeScore < 70) return "#f1c40f"; // yellow
-    return "#2ecc71"; // green
+    if (safeScore < 40) return "#ef4444"; // red
+    if (safeScore < 70) return "#f59e0b"; // yellow/orange
+    return "#22c55e"; // green
   };
 
+  const color = getColor();
+
   return (
-    <div style={{ marginBottom: "30px" }}>
-      <h3>Productivity Meter</h3>
-
-      {/* Outer bar */}
-      <div
-        style={{
-          width: "100%",
-          height: "25px",
-          backgroundColor: "#ddd",
-          borderRadius: "12px",
-          overflow: "hidden",
-        }}
-      >
-        {/* Inner filled bar */}
-        <div
-          style={{
-            width: `${safeScore}%`,
-            height: "100%",
-            backgroundColor: getColor(),
-            transition: "width 0.5s ease",
-          }}
-        />
+    <div className="productivity-meter-card">
+      <div className="meter-header">
+        <span className="meter-icon">🎯</span>
+        <h3 className="meter-title">Productivity Score</h3>
       </div>
-
-      <p style={{ marginTop: "8px" }}>
-        {safeScore}% productive
-      </p>
+      
+      <div className="meter-container">
+        <div className="meter-bar-bg">
+          <div
+            className="meter-bar-fill"
+            style={{
+              width: `${safeScore}%`,
+              background: `linear-gradient(90deg, ${color}, ${color}dd)`,
+            }}
+          />
+        </div>
+        <div className="meter-label">
+          <span className="meter-percentage">{safeScore}%</span>
+          <span className="meter-text">productive</span>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,64 +1,38 @@
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 const getToken = () => localStorage.getItem("token");
 
-export const fetchTodayTotal = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/today", {
+// Centralized helper to handle auth errors and JSON parsing
+const request = async (path) => {
+  const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },
   });
+
+  if (res.status === 401) {
+    // Token is missing/invalid/expired — clear and force re-auth
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+    throw new Error("Unauthorized");
+  }
+
   return res.json();
 };
 
-export const fetchCategoryAnalytics = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/category", {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return res.json();
-};
+export const fetchTodayTotal = async () => request("/api/analytics/today");
 
-export const fetchDailyAnalytics = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/daily", {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return res.json();
-};
+export const fetchCategoryAnalytics = async () =>
+  request("/api/analytics/category");
 
-export const fetchWeeklyAnalytics = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/weekly", {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return res.json();
-};
+export const fetchDailyAnalytics = async () => request("/api/analytics/daily");
 
-export const fetchProductivityScore = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/productivity", {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return res.json();
-};
+export const fetchWeeklyAnalytics = async () => request("/api/analytics/weekly");
 
-export const fetchTodayProductivity = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/productivity/today", {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return res.json();
-};
+export const fetchProductivityScore = async () =>
+  request("/api/analytics/productivity");
 
-export const fetchWeeklyProductivity = async () => {
-  const res = await fetch("http://localhost:5000/api/analytics/productivity/week", {
-    headers: {
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
-  return res.json();
-};
+export const fetchTodayProductivity = async () =>
+  request("/api/analytics/productivity/today");
+
+export const fetchWeeklyProductivity = async () =>
+  request("/api/analytics/productivity/week");

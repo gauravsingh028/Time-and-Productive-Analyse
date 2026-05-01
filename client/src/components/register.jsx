@@ -1,16 +1,26 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
 
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     const res = await registerUser({ name, email, password });
-    alert(res.message || "Registered successfully");
+    
+    if (res.error) {
+      setError(res.message || "Registration failed");
+    } else {
+      alert(res.message || "Registered successfully! Please login.");
+      navigate("/login");
+    }
 
     setName("");
     setEmail("");
@@ -18,33 +28,67 @@ function Register() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
+    <div className="page-container">
+      <div className="auth-card">
+        <h2 className="auth-title">Create your account</h2>
+        <p className="auth-subtitle">
+          Join <strong>FocusFlow</strong> and turn your time data into insight.
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        {error && <div className="auth-error">{error}</div>}
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div>
+            <div className="field-label">Name</div>
+            <input
+              className="field-input"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div>
+            <div className="field-label">Email</div>
+            <input
+              className="field-input"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <button type="submit">Register</button>
-      </form>
+          <div>
+            <div className="field-label">Password</div>
+            <input
+              className="field-input"
+              type="password"
+              placeholder="At least 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary">
+            Create account
+          </button>
+        </form>
+
+        <p className="auth-footer-text">
+          Already have an account?
+          <span
+            className="auth-link"
+            onClick={() => navigate("/login")}
+          >
+            Log in
+          </span>
+        </p>
+      </div>
     </div>
   );
 }
