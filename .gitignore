@@ -3,6 +3,7 @@ node_modules/
 
 # Also ignore nested node_modules in subprojects
 **/node_modules/
+.env
 
 # Optional: common Node.js artifacts
 npm-debug.log*

@@ -1,10 +1,10 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import connectDB from "./config/db.js";
 import cors from "cors";
 
 
-dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -16,8 +16,10 @@ app.get("/", (req, res) => {
 
 connectDB();
 
-app.listen(5000, () => {
-    console.log("Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5001;
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
 });
 
 import taskRoutes from "./routes/taskRoutes.js";
